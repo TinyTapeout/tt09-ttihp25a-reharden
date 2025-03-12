@@ -17,6 +17,7 @@ module tt_um_algofoogle_tt09_ring_osc (
 );
 
   ring_osc myring (
+    .ena(ena),
     .osc_out(uo_out[0])
   );
 

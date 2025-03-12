@@ -13,5 +13,4 @@ See [tt09-ring-osc](https://github.com/algofoogle/tt09-ring-osc) and [tt09-ring-
 
 This one has a configurable ring oscillator; the feedback can be tapped at different parts of the chain.
 
-This use verilog to instantiate the rings of (an odd number of) `sky130_fd_sc_hd__inv_2` cells.
-
+This uses Verilog to instantiate a ring of (an odd number of) `sky130_fd_sc_hd__inv_2` cells -- **UPDATE:** Actually, since this is targeting IHP instead, there is a polyfill that somebody else wrote to map sky130 cells to generic cells (that OpenLane will then map to IHP cells).

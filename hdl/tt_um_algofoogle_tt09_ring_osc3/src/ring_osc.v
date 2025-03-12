@@ -24,7 +24,7 @@ module amm_inverter (
     output  wire y
 );
 
-    (* keep *) sky130_fd_sc_hd__inv_2   sky_inverter (
+    (* keep_hierarchy *) sky130_fd_sc_hd__inv_2   sky_inverter (
         .A  (a),
         .Y  (y)
     );
@@ -44,24 +44,25 @@ module inv_chain #(
     assign ins[0] = a;
     assign ins[N-1:1] = outs[N-2:0];
     assign y = outs[N-1];
-    (* keep *) amm_inverter inv_array [N-1:0] ( .a(ins), .y(outs) );
+    (* keep_hierarchy *) amm_inverter inv_array [N-1:0] ( .a(ins), .y(outs) );
 
 endmodule
 
 module tapped_ring (
+    input wire ena,
     input [2:0] tap,
     output y
 );
     wire b0, b1, b11, b21, b31, b41, b51, b101, b301, b1001;
-    (* keep *) amm_inverter      start ( .a(  b0), .y(     b1) ); // If all the counts below are even, this makes it odd.
-    (* keep *) inv_chain #(.N(10))  c0 ( .a(  b1), .y(    b11) );
-    (* keep *) inv_chain #(.N(10))  c1 ( .a( b11), .y(    b21) );
-    (* keep *) inv_chain #(.N(10))  c2 ( .a( b21), .y(    b31) );
-    (* keep *) inv_chain #(.N(10))  c3 ( .a( b31), .y(    b41) );
-    (* keep *) inv_chain #(.N(10))  c4 ( .a( b41), .y(    b51) );
-    (* keep *) inv_chain #(.N(50))  c5 ( .a( b51), .y(   b101) );
-    (* keep *) inv_chain #(.N(200)) c6 ( .a(b101), .y(   b301) );
-    (* keep *) inv_chain #(.N(700)) c7 ( .a(b301), .y(  b1001) );
+    (* keep_hierarchy *) amm_inverter      start ( .a(  b0), .y(     b1) ); // If all the counts below are even, this makes it odd.
+    (* keep_hierarchy *) inv_chain #(.N(10))  c0 ( .a(  b1), .y(    b11) );
+    (* keep_hierarchy *) inv_chain #(.N(10))  c1 ( .a( b11), .y(    b21) );
+    (* keep_hierarchy *) inv_chain #(.N(10))  c2 ( .a( b21), .y(    b31) );
+    (* keep_hierarchy *) inv_chain #(.N(10))  c3 ( .a( b31), .y(    b41) );
+    (* keep_hierarchy *) inv_chain #(.N(10))  c4 ( .a( b41), .y(    b51) );
+    (* keep_hierarchy *) inv_chain #(.N(50))  c5 ( .a( b51), .y(   b101) );
+    (* keep_hierarchy *) inv_chain #(.N(200)) c6 ( .a(b101), .y(   b301) );
+    (* keep_hierarchy *) inv_chain #(.N(700)) c7 ( .a(b301), .y(  b1001) );
     assign y =  tap == 0 ?   b11:
                 tap == 1 ?   b21:
                 tap == 2 ?   b31:
@@ -70,5 +71,5 @@ module tapped_ring (
                 tap == 5 ?  b101:
                 tap == 6 ?  b301:
                 /*tap==7*/ b1001;
-    assign b0 = y;
+    assign b0 = y & ena;
 endmodule

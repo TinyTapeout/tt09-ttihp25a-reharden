@@ -24,7 +24,7 @@ module amm_inverter (
     output  wire y
 );
 
-    (* keep *) sky130_fd_sc_hd__inv_2   sky_inverter (
+    (* keep_hierarchy *) sky130_fd_sc_hd__inv_2   sky_inverter (
         .A  (a),
         .Y  (y)
     );
@@ -34,15 +34,16 @@ endmodule
 module ring_osc #(
     parameter DEPTH = 500 // Becomes DEPTH*2+1 inverters to ensure it is odd.
 ) (
+    input wire ena,
     output osc_out
 );
 
     wire [DEPTH*2:0] inv_in;
     wire [DEPTH*2:0] inv_out;
     assign inv_in[DEPTH*2:1] = inv_out[DEPTH*2-1:0]; // Chain.
-    assign inv_in[0] = inv_out[DEPTH*2]; // Loop back.
+    assign inv_in[0] = inv_out[DEPTH*2] & ena; // Loop back, unless disabled.
     // Generate an instance array of inverters, chained and looped back via the 2 assignments above:
-    (* keep *) amm_inverter inv_array [DEPTH*2:0] ( .a(inv_in), .y(inv_out) );
+    (* keep_hierarchy *) amm_inverter inv_array [DEPTH*2:0] ( .a(inv_in), .y(inv_out) );
     assign osc_out = inv_in[0];
 
 endmodule

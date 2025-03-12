@@ -22,5 +22,5 @@ I already submitted [tt09-ring-osc](https://github.com/algofoogle/tt09-ring-osc)
 
 Approximate frequences are estimated on the assumption that each inverter introduces a delay of ~70ps.
 
-These use verilog to instantiate the rings of (an odd number of) `sky130_fd_sc_hd__inv_2` cells.
+These use Verilog to instantiate the rings of (an odd number of) `sky130_fd_sc_hd__inv_2` cells -- **UPDATE:** Actually, since this is targeting IHP instead, there is a polyfill that somebody else wrote to map sky130 cells to generic cells (that OpenLane will then map to IHP cells).
 

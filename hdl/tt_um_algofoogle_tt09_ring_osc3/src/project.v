@@ -17,7 +17,7 @@ module tt_um_algofoogle_tt09_ring_osc3 (
 );
 
   wire osc;
-  tapped_ring tapped_ring ( .tap(ui_in[2:0]), .y(osc) );
+  tapped_ring tapped_ring ( .ena(ena), .tap(ui_in[2:0]), .y(osc) );
   assign uo_out[0] = osc;
   reg [6:0] count;
   always @(posedge osc) count <= count + 1;
