@@ -400,13 +400,13 @@ jobs:
             exit 1
           fi
 
-      #- name: Publish build logs
-      #  #if: failure()
-      #  uses: actions/upload-artifact@v4
-      #  with:
-      #    name: GDS_${{ matrix.project }}
-      #    path: |
-      #      wokwi/${{ matrix.project }}/runs/*
+      - name: Publish build logs
+        if: success() || failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: GDS_${{ matrix.project }}
+          path: |
+            wokwi/${{ matrix.project }}/runs/*
 
       - name: Install KLayout
         shell: bash
@@ -434,6 +434,7 @@ jobs:
           cp runs/wokwi/*-yosys-synthesis/reports/stat.rpt tt_submission/stats/synthesis-stats.txt
 
       - name: Publish tt_submission artifact
+        if: success() || failure()
         uses: actions/upload-artifact@v4
         with:
           name: tt_submission_${{ matrix.project }}
